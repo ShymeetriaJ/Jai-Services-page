@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>unComplex Digital Media — Services</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --white: #f5f3ee;
+      --mid: #1a1a1a;
+      --border: rgba(245, 243, 238, 0.12);
+      --muted: rgba(245, 243, 238, 0.45);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE TEXTURE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.5;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      border-bottom: 1px solid var(--border);
+      background: rgba(10, 10, 10, 0.88);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: rgba(245,243,238,0.4); }
+
+    nav a.nav-cta {
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--white);
+      padding: 0.55rem 1.4rem;
+      text-decoration: none;
+      border-radius: 2px;
+      transition: opacity 0.2s;
+    }
+
+    nav a.nav-cta:hover { opacity: 0.8; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 3rem 4rem;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .hero-bg-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(100px, 20vw, 260px);
+      color: rgba(245,243,238,0.03);
+      white-space: nowrap;
+      pointer-events: none;
+      letter-spacing: -0.02em;
+      user-select: none;
+    }
+
+    .hero-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.2s forwards;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 10vw, 9rem);
+      line-height: 0.92;
+      letter-spacing: -0.01em;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.35s forwards;
+    }
+
+    .hero h1 em {
+      font-family: 'DM Sans', sans-serif;
+      font-style: italic;
+      font-weight: 300;
+      font-size: 0.45em;
+      display: block;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+      margin-bottom: 0.3rem;
+    }
+
+    .hero-sub {
+      max-width: 480px;
+      font-size: 1rem;
+      color: var(--muted);
+      margin-top: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s 0.5s forwards;
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 2.5rem;
+      right: 3rem;
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      writing-mode: vertical-rl;
+      opacity: 0;
+      animation: fadeUp 1s 0.9s forwards;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 3rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      max-width: 80px;
+    }
+
+    /* ── SERVICES GRID ── */
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+    }
+
+    .service-card {
+      background: var(--black);
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: background 0.3s;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--white);
+      transform: translateY(100%);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 0;
+    }
+
+    .service-card:hover::before { transform: translateY(0); }
+
+    .service-card:hover .service-num,
+    .service-card:hover .service-title,
+    .service-card:hover .service-desc,
+    .service-card:hover .service-tag { color: var(--black) !important; }
+
+    .service-card > * { position: relative; z-index: 1; }
+
+    .service-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3.5rem;
+      color: rgba(245,243,238,0.08);
+      line-height: 1;
+      margin-bottom: 1.5rem;
+      transition: color 0.3s;
+    }
+
+    .service-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.8rem;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+      transition: color 0.3s;
+    }
+
+    .service-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+      transition: color 0.3s;
+    }
+
+    .service-tag {
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(245,243,238,0.3);
+      transition: color 0.3s;
+    }
+
+    /* ── PROCESS ── */
+    .process-list { list-style: none; }
+
+    .process-item {
+      display: grid;
+      grid-template-columns: 3rem 1fr;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+    }
+
+    .process-item:last-child { border-bottom: none; }
+
+    .process-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      color: var(--muted);
+      padding-top: 0.1rem;
+    }
+
+    .process-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+    }
+
+    .process-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* ── CONTACT FORM ── */
+    .contact-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .contact-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      line-height: 0.95;
+      letter-spacing: 0.02em;
+      margin-bottom: 1.5rem;
+    }
+
+    .contact-note {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .form-field { margin-bottom: 1.25rem; }
+
+    .form-field label {
+      display: block;
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      color: var(--white);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      font-size: 0.95rem;
+      padding: 0.6rem 0;
+      outline: none;
+      transition: border-color 0.2s;
+      appearance: none;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-bottom-color: var(--white);
+    }
+
+    .form-field select option { background: var(--black); }
+
+    .form-field textarea { resize: none; height: 80px; }
+
+    .form-submit {
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .form-submit button {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.12em;
+      background: var(--white);
+      color: var(--black);
+      border: none;
+      padding: 0.85rem 2.5rem;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .form-submit button:hover { opacity: 0.85; }
+    .form-submit button:active { transform: scale(0.98); }
+
+    .form-note {
+      font-size: 0.7rem;
+      color: rgba(245,243,238,0.25);
+      line-height: 1.5;
+    }
+
+    .form-success {
+      display: none;
+      padding: 1.5rem;
+      border: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 2rem 3rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer .foot-logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+
+    footer .foot-copy {
+      font-size: 0.7rem;
+      color: rgba(245,243,238,0.2);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      /* Stop any element from causing horizontal overflow */
+      body { overflow-x: hidden; }
+
+      /* Nav: shrink logo font, tighten padding so both items fit */
+      nav {
+        padding: 0.9rem 1.25rem;
+        gap: 0.5rem;
+      }
+      .nav-logo {
+        font-size: 1rem;
+        white-space: nowrap;
+      }
+      nav a.nav-cta {
+        font-size: 0.65rem;
+        padding: 0.45rem 0.9rem;
+        white-space: nowrap;
+      }
+
+      /* Hero: reduce padding and clamp heading so it never overflows */
+      .hero {
+        padding: 0 1.25rem 3rem;
+        min-height: 100svh;
+      }
+      .hero h1 {
+        font-size: clamp(2.8rem, 16vw, 5rem);
+      }
+      .hero-bg-text {
+        font-size: clamp(60px, 28vw, 120px);
+      }
+      .hero-scroll { display: none; }
+
+      /* Sections */
+      section { padding: 3rem 1.25rem; }
+
+      /* Services grid: single column on small screens */
+      .services-grid { grid-template-columns: 1fr; }
+
+      /* Contact: stack vertically */
+      .contact-wrap { grid-template-columns: 1fr; gap: 2.5rem; }
+
+      /* Footer */
+      footer { flex-direction: column; gap: 0.75rem; text-align: center; padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-logo" href="#">un<span>Complex</span> Digital Media</a>
+    <a class="nav-cta" href="#contact">Book a Consultation</a>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-bg-text">DIGITAL</div>
+    <p class="hero-label">unComplex Digital Media &mdash; Web &amp; Design Services</p>
+    <h1>
+      <em>Making the web</em>
+      Simple.<br>Powerful.<br>Yours.
+    </h1>
+    <p class="hero-sub">I help local businesses build a strong online presence — without the complexity. Websites, graphics, and digital tools built for real people.</p>
+    <span class="hero-scroll">Scroll to explore</span>
+  </div>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <p class="section-label">What I offer</p>
+    <div class="services-grid">
+
+      <div class="service-card reveal">
+        <div class="service-num">01</div>
+        <div class="service-title">Website Maintenance</div>
+        <div class="service-desc">Keep your site fresh, fast, and working. Regular updates, content changes, and full refreshes for local businesses that need to stay current.</div>
+        <div class="service-tag">Monthly retainer available</div>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">02</div>
+        <div class="service-title">Landing Pages</div>
+        <div class="service-desc">One focused page that turns visitors into customers. Built for campaigns, products, events, or any goal that needs a clear call to action.</div>
+        <div class="service-tag">One-time project</div>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">03</div>
+        <div class="service-title">Digital Graphics</div>
+        <div class="service-desc">Social media visuals, flyers, banners, business cards, and more. Your brand looking sharp — everywhere your customers see it.</div>
+        <div class="service-tag">Per project or package</div>
+      </div>
+
+      <div class="service-card reveal">
+        <div class="service-num">04</div>
+        <div class="service-title">Custom Websites</div>
+        <div class="service-desc">A fully designed and built website tailored to your business. From first sketch to live launch — built to grow with you.</div>
+        <div class="service-tag">Custom quote</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section id="process">
+    <p class="section-label">How it works</p>
+    <ul class="process-list">
+      <li class="process-item reveal">
+        <span class="process-num">01</span>
+        <div>
+          <div class="process-title">Book a free 15-minute consultation</div>
+          <div class="process-desc">We talk through your needs — no pressure, no commitment. I use a timer so it's quick and respectful of your time.</div>
+        </div>
+      </li>
+      <li class="process-item reveal">
+        <span class="process-num">02</span>
+        <div>
+          <div class="process-title">Receive a clear, honest proposal</div>
+          <div class="process-desc">You'll get a straightforward quote with scope, timeline, and pricing. No jargon, no surprises.</div>
+        </div>
+      </li>
+      <li class="process-item reveal">
+        <span class="process-num">03</span>
+        <div>
+          <div class="process-title">We build it together</div>
+          <div class="process-desc">I keep you in the loop at every step. You stay informed without needing to know a single line of code.</div>
+        </div>
+      </li>
+      <li class="process-item reveal">
+        <span class="process-num">04</span>
+        <div>
+          <div class="process-title">Launch and beyond</div>
+          <div class="process-desc">Your project goes live — and I'm still here if you need updates, maintenance, or anything else down the road.</div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact">
+    <p class="section-label">Get in touch</p>
+    <div class="contact-wrap">
+
+      <div class="reveal">
+        <h2 class="contact-headline">Let's talk about your business.</h2>
+        <p class="contact-note">Fill out the form and I'll reach out to schedule your free 15-minute consultation. I respond within one business day.</p>
+      </div>
+
+      <div class="reveal">
+        <form id="contactForm" action="https://formspree.io/f/mdabeevg" method="POST">
+          <div class="form-field">
+            <label for="name">Your name</label>
+            <input type="text" id="name" name="name" placeholder="First and last name" required />
+          </div>
+          <div class="form-field">
+            <label for="business">Business name</label>
+            <input type="text" id="business" name="business" placeholder="Your business (optional)" />
+          </div>
+          <div class="form-field">
+            <label for="email">Email address</label>
+            <input type="email" id="email" name="email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-field">
+            <label for="service">Service I'm interested in</label>
+            <select id="service" name="service">
+              <option value="">Select a service...</option>
+              <option value="maintenance">Website Maintenance</option>
+              <option value="landing">Landing Page</option>
+              <option value="graphics">Digital Graphics</option>
+              <option value="custom">Custom Website</option>
+              <option value="unsure">Not sure yet — let's talk</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label for="message">Anything you'd like me to know</label>
+            <textarea id="message" name="message" placeholder="Tell me a little about your project or goals..."></textarea>
+          </div>
+          <div class="form-submit">
+            <button type="submit">Send Message</button>
+            <span class="form-note">15-minute consultations only.<br>I'll follow up within one business day.</span>
+          </div>
+        </form>
+        <div class="form-success" id="formSuccess">
+          <strong style="display:block; margin-bottom:0.5rem; color: var(--white);">Message received.</strong>
+          Thank you for reaching out. I'll be in touch within one business day to schedule your consultation.
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="foot-logo">unComplex Digital Media</span>
+    <span class="foot-copy">&copy; 2025 &mdash; All rights reserved</span>
+  </footer>
+
+  <script>
+    // ── SCROLL REVEAL ──
+    // IntersectionObserver watches elements as you scroll.
+    // When an element enters the screen, we add the 'visible' class.
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    // Find all elements with class 'reveal' and start watching them
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── FORM SUBMISSION ──
+    // We listen for the form's 'submit' event.
+    // preventDefault() stops the browser from refreshing the page.
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // fetch() sends the form data to Formspree's server.
+      // 'this.action' is the Formspree URL we added to the form tag.
+      // 'new FormData(this)' packages up all the field values automatically.
+      fetch(this.action, {
+        method: 'POST',
+        body: new FormData(this),
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(response => {
+        if (response.ok) {
+          // Submission succeeded — hide form, show thank you message
+          this.style.display = 'none';
+          document.getElementById('formSuccess').style.display = 'block';
+        } else {
+          alert('Oops! Something went wrong. Please try again.');
+        }
+      })
+      .catch(error => {
+        alert('Network error. Please check your connection and try again.');
+      });
+    });
+  </script>
+
+</body>
+</html>
